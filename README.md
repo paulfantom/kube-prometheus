@@ -207,15 +207,15 @@ Here's [example.jsonnet](example.jsonnet):
 [embedmd]:# (example.jsonnet)
 ```jsonnet
 local kp =
-  (import 'kube-prometheus/kube-prometheus.libsonnet') +
+  (import 'kube-prometheus/main.libsonnet') +
   // Uncomment the following imports to enable its patches
-  // (import 'kube-prometheus/kube-prometheus-anti-affinity.libsonnet') +
-  // (import 'kube-prometheus/kube-prometheus-managed-cluster.libsonnet') +
-  // (import 'kube-prometheus/kube-prometheus-node-ports.libsonnet') +
-  // (import 'kube-prometheus/kube-prometheus-static-etcd.libsonnet') +
-  // (import 'kube-prometheus/kube-prometheus-thanos-sidecar.libsonnet') +
-  // (import 'kube-prometheus/kube-prometheus-custom-metrics.libsonnet') +
-  // (import 'kube-prometheus/kube-prometheus-external-metrics.libsonnet') +
+  // (import 'kube-prometheus/addons/anti-affinity.libsonnet') +
+  // (import 'kube-prometheus/addons/managed-cluster.libsonnet') +
+  // (import 'kube-prometheus/addons/node-ports.libsonnet') +
+  // (import 'kube-prometheus/addons/static-etcd.libsonnet') +
+  // (import 'kube-prometheus/addons/thanos-sidecar.libsonnet') +
+  // (import 'kube-prometheus/addons/custom-metrics.libsonnet') +
+  // (import 'kube-prometheus/addons/external-metrics.libsonnet') +
   {
     values+:: {
       common+: {
@@ -413,24 +413,24 @@ kubeadm:
 
 [embedmd]:# (examples/jsonnet-snippets/kubeadm.jsonnet)
 ```jsonnet
-(import 'kube-prometheus/kube-prometheus.libsonnet') +
-(import 'kube-prometheus/kube-prometheus-kubeadm.libsonnet')
+(import 'kube-prometheus/main.libsonnet') +
+(import 'kube-prometheus/platforms/kubeadm.libsonnet')
 ```
 
 bootkube:
 
 [embedmd]:# (examples/jsonnet-snippets/bootkube.jsonnet)
 ```jsonnet
-(import 'kube-prometheus/kube-prometheus.libsonnet') +
-(import 'kube-prometheus/kube-prometheus-bootkube.libsonnet')
+(import 'kube-prometheus/main.libsonnet') +
+(import 'kube-prometheus/platforms/bootkube.libsonnet')
 ```
 
 kops:
 
 [embedmd]:# (examples/jsonnet-snippets/kops.jsonnet)
 ```jsonnet
-(import 'kube-prometheus/kube-prometheus.libsonnet') +
-(import 'kube-prometheus/kube-prometheus-kops.libsonnet')
+(import 'kube-prometheus/main.libsonnet') +
+(import 'kube-prometheus/platforms/kops.libsonnet')
 ```
 
 kops with CoreDNS:
@@ -439,25 +439,25 @@ If your kops cluster is using CoreDNS, there is an additional mixin to import.
 
 [embedmd]:# (examples/jsonnet-snippets/kops-coredns.jsonnet)
 ```jsonnet
-(import 'kube-prometheus/kube-prometheus.libsonnet') +
-(import 'kube-prometheus/kube-prometheus-kops.libsonnet') +
-(import 'kube-prometheus/kube-prometheus-kops-coredns.libsonnet')
+(import 'kube-prometheus/main.libsonnet') +
+(import 'kube-prometheus/platforms/kops.libsonnet') +
+(import 'kube-prometheus/platforms/kops-coredns.libsonnet')
 ```
 
 kubespray:
 
 [embedmd]:# (examples/jsonnet-snippets/kubespray.jsonnet)
 ```jsonnet
-(import 'kube-prometheus/kube-prometheus.libsonnet') +
-(import 'kube-prometheus/kube-prometheus-kubespray.libsonnet')
+(import 'kube-prometheus/main.libsonnet') +
+(import 'kube-prometheus/platforms/kubespray.libsonnet')
 ```
 
-kube-aws:
+aws:
 
-[embedmd]:# (examples/jsonnet-snippets/kube-aws.jsonnet)
+[embedmd]:# (examples/jsonnet-snippets/aws.jsonnet)
 ```jsonnet
-(import 'kube-prometheus/kube-prometheus.libsonnet') +
-(import 'kube-prometheus/kube-prometheus-kube-aws.libsonnet')
+(import 'kube-prometheus/main.libsonnet') +
+(import 'kube-prometheus/platforms/aws.libsonnet')
 ```
 
 ### Internal Registry
@@ -484,7 +484,7 @@ Then to generate manifests with `internal-registry.com/organization`, use the `w
 [embedmd]:# (examples/internal-registry.jsonnet)
 ```jsonnet
 local mixin = import 'kube-prometheus/kube-prometheus-config-mixins.libsonnet';
-local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') + {
+local kp = (import 'kube-prometheus/main.libsonnet') + {
   _config+:: {
     namespace: 'monitoring',
   },
@@ -505,8 +505,8 @@ Another mixin that may be useful for exploring the stack is to expose the UIs of
 
 [embedmd]:# (examples/jsonnet-snippets/node-ports.jsonnet)
 ```jsonnet
-(import 'kube-prometheus/kube-prometheus.libsonnet') +
-(import 'kube-prometheus/kube-prometheus-node-ports.libsonnet')
+(import 'kube-prometheus/main.libsonnet') +
+(import 'kube-prometheus/addons/node-ports.libsonnet')
 ```
 
 ### Prometheus Object Name
@@ -515,7 +515,7 @@ To give another customization example, the name of the `Prometheus` object provi
 
 [embedmd]:# (examples/prometheus-name-override.jsonnet)
 ```jsonnet
-((import 'kube-prometheus/kube-prometheus.libsonnet') + {
+((import 'kube-prometheus/main.libsonnet') + {
    prometheus+: {
      prometheus+: {
        metadata+: {
@@ -532,7 +532,7 @@ Standard Kubernetes manifests are all written using [ksonnet-lib](https://github
 
 [embedmd]:# (examples/ksonnet-example.jsonnet)
 ```jsonnet
-((import 'kube-prometheus/kube-prometheus.libsonnet') + {
+((import 'kube-prometheus/main.libsonnet') + {
    nodeExporter+: {
      daemonset+: {
        metadata+: {
@@ -549,41 +549,37 @@ The Alertmanager configuration is located in the `_config.alertmanager.config` c
 
 [embedmd]:# (examples/alertmanager-config.jsonnet)
 ```jsonnet
-((import 'kube-prometheus/kube-prometheus.libsonnet') + {
-   _config+:: {
-     alertmanager+: {
-       config: |||
-         global:
-           resolve_timeout: 10m
-         route:
-           group_by: ['job']
-           group_wait: 30s
-           group_interval: 5m
-           repeat_interval: 12h
+((import 'kube-prometheus/main.libsonnet') + {
+   alertmanager+: {
+     config: |||
+       global:
+         resolve_timeout: 10m
+       route:
+         group_by: ['job']
+         group_wait: 30s
+         group_interval: 5m
+         repeat_interval: 12h
+         receiver: 'null'
+         routes:
+         - match:
+             alertname: Watchdog
            receiver: 'null'
-           routes:
-           - match:
-               alertname: Watchdog
-             receiver: 'null'
-         receivers:
-         - name: 'null'
-       |||,
-     },
+       receivers:
+       - name: 'null'
+     |||,
    },
- }).alertmanager.secret
+ }).secret
 ```
 
 In the above example the configuration has been inlined, but can just as well be an external file imported in jsonnet via the `importstr` function.
 
 [embedmd]:# (examples/alertmanager-config-external.jsonnet)
 ```jsonnet
-((import 'kube-prometheus/kube-prometheus.libsonnet') + {
-   _config+:: {
-     alertmanager+: {
-       config: importstr 'alertmanager-config.yaml',
-     },
+((import 'kube-prometheus/main.libsonnet') + {
+   alertmanager+: {
+     config: importstr 'alertmanager-config.yaml',
    },
- }).alertmanager.secret
+ }).secret
 ```
 
 ### Adding additional namespaces to monitor
@@ -592,11 +588,15 @@ In order to monitor additional namespaces, the Prometheus server requires the ap
 
 [embedmd]:# (examples/additional-namespaces.jsonnet)
 ```jsonnet
-local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') + {
-  _config+:: {
-    namespace: 'monitoring',
+local kp = (import 'kube-prometheus/main.libsonnet') + {
+  values+:: {
+    common+: {
+      namespace: 'monitoring',
+    },
+  },
 
-    prometheus+:: {
+  prometheus+: {
+    spec+: {
       namespaces+: ['my-namespace', 'my-second-namespace'],
     },
   },
@@ -621,14 +621,19 @@ You can define ServiceMonitor resources in your `jsonnet` spec. See the snippet 
 
 [embedmd]:# (examples/additional-namespaces-servicemonitor.jsonnet)
 ```jsonnet
-local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') + {
-  _config+:: {
-    namespace: 'monitoring',
-    prometheus+:: {
+local kp = (import 'kube-prometheus/main.libsonnet') + {
+  values+:: {
+    common+: {
+      namespace: 'monitoring',
+    },
+  },
+
+  prometheus+: {
+    spec+: {
       namespaces+: ['my-namespace', 'my-second-namespace'],
     },
   },
-  prometheus+:: {
+  prometheus+: {
     serviceMonitorMyNamespace: {
       apiVersion: 'monitoring.coreos.com/v1',
       kind: 'ServiceMonitor',
@@ -671,13 +676,16 @@ In case you want to monitor all namespaces in a cluster, you can add the followi
 
 [embedmd]:# (examples/all-namespaces.jsonnet)
 ```jsonnet
-local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') +
+local kp = (import 'kube-prometheus/main.libsonnet') +
            (import 'kube-prometheus/kube-prometheus-all-namespaces.libsonnet') + {
-  _config+:: {
-    namespace: 'monitoring',
-
-    prometheus+:: {
-      namespaces: [],
+  values+:: {
+    common+: {
+      namespace: 'monitoring',
+    },
+    prometheus+: {
+      spec+: {
+        namespaces: [],
+      },
     },
   },
 };
@@ -718,7 +726,7 @@ To do that, one can import the following mixin
 
 [embedmd]:# (examples/strip-limits.jsonnet)
 ```jsonnet
-local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') +
+local kp = (import 'kube-prometheus/main.libsonnet') +
            (import 'kube-prometheus/kube-prometheus-strip-limits.libsonnet') + {
   _config+:: {
     namespace: 'monitoring',

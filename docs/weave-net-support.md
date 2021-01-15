@@ -17,7 +17,7 @@ Using kube-prometheus and kubectl you will be able install the following for mon
 
 [embedmd]:# (../examples/weave-net-example.jsonnet)
 ```jsonnet
-local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') +
+local kp = (import 'kube-prometheus/main.libsonnet') +
            (import 'kube-prometheus/kube-prometheus-weave-net.libsonnet') + {
   _config+:: {
     namespace: 'monitoring',

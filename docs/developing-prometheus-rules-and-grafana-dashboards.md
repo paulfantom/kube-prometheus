@@ -11,15 +11,15 @@ As a basis, all examples in this guide are based on the base example of the kube
 [embedmd]:# (../example.jsonnet)
 ```jsonnet
 local kp =
-  (import 'kube-prometheus/kube-prometheus.libsonnet') +
+  (import 'kube-prometheus/main.libsonnet') +
   // Uncomment the following imports to enable its patches
-  // (import 'kube-prometheus/kube-prometheus-anti-affinity.libsonnet') +
-  // (import 'kube-prometheus/kube-prometheus-managed-cluster.libsonnet') +
-  // (import 'kube-prometheus/kube-prometheus-node-ports.libsonnet') +
-  // (import 'kube-prometheus/kube-prometheus-static-etcd.libsonnet') +
-  // (import 'kube-prometheus/kube-prometheus-thanos-sidecar.libsonnet') +
-  // (import 'kube-prometheus/kube-prometheus-custom-metrics.libsonnet') +
-  // (import 'kube-prometheus/kube-prometheus-external-metrics.libsonnet') +
+  // (import 'kube-prometheus/addons/anti-affinity.libsonnet') +
+  // (import 'kube-prometheus/addons/managed-cluster.libsonnet') +
+  // (import 'kube-prometheus/addons/node-ports.libsonnet') +
+  // (import 'kube-prometheus/addons/static-etcd.libsonnet') +
+  // (import 'kube-prometheus/addons/thanos-sidecar.libsonnet') +
+  // (import 'kube-prometheus/addons/custom-metrics.libsonnet') +
+  // (import 'kube-prometheus/addons/external-metrics.libsonnet') +
   {
     values+:: {
       common+: {
@@ -59,7 +59,7 @@ The format is exactly the Prometheus format, so there should be no changes neces
 
 [embedmd]:# (../examples/prometheus-additional-alert-rule-example.jsonnet)
 ```jsonnet
-local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') + {
+local kp = (import 'kube-prometheus/main.libsonnet') + {
   _config+:: {
     namespace: 'monitoring',
   },
@@ -102,7 +102,7 @@ In order to add a recording rule, simply do the same with the `prometheusRules` 
 
 [embedmd]:# (../examples/prometheus-additional-recording-rule-example.jsonnet)
 ```jsonnet
-local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') + {
+local kp = (import 'kube-prometheus/main.libsonnet') + {
   _config+:: {
     namespace: 'monitoring',
   },
@@ -149,7 +149,7 @@ Then import it in jsonnet:
 
 [embedmd]:# (../examples/prometheus-additional-rendered-rule-example.jsonnet)
 ```jsonnet
-local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') + {
+local kp = (import 'kube-prometheus/main.libsonnet') + {
   _config+:: {
     namespace: 'monitoring',
   },
@@ -255,7 +255,7 @@ local prometheus = grafana.prometheus;
 local template = grafana.template;
 local graphPanel = grafana.graphPanel;
 
-local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') + {
+local kp = (import 'kube-prometheus/main.libsonnet') + {
   _config+:: {
     namespace: 'monitoring',
   },
@@ -303,7 +303,7 @@ As jsonnet is a superset of json, the jsonnet `import` function can be used to i
 
 [embedmd]:# (../examples/grafana-additional-rendered-dashboard-example.jsonnet)
 ```jsonnet
-local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') + {
+local kp = (import 'kube-prometheus/main.libsonnet') + {
   _config+:: {
     namespace: 'monitoring',
   },
@@ -329,7 +329,7 @@ local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') + {
 In case you have lots of json dashboard exported out from grafana UI the above approach is going to take lots of time to improve performance we can use `rawDashboards` field and provide it's value as json string by using `importstr`
 [embedmd]:# (../examples/grafana-additional-rendered-dashboard-example-2.jsonnet)
 ```jsonnet
-local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') + {
+local kp = (import 'kube-prometheus/main.libsonnet') + {
   _config+:: {
     namespace: 'monitoring',
   },
