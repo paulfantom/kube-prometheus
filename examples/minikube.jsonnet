@@ -1,5 +1,5 @@
 local kp =
-  (import 'kube-prometheus/kube-prometheus.libsonnet') +
+  (import 'kube-prometheus/main.libsonnet') +
   (import 'kube-prometheus/kube-prometheus-kubeadm.libsonnet') +
   // Note that NodePort type services is likely not a good idea for your production use case, it is only used for demonstration purposes here.
   (import 'kube-prometheus/kube-prometheus-node-ports.libsonnet') +

@@ -14,7 +14,7 @@ local ingress(name, namespace, rules) = {
 };
 
 local kp =
-  (import 'kube-prometheus/kube-prometheus.libsonnet') +
+  (import 'kube-prometheus/main.libsonnet') +
   {
     _config+:: {
       namespace: 'monitoring',

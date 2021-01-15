@@ -1,4 +1,4 @@
-local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') +
+local kp = (import 'kube-prometheus/main.libsonnet') +
            (import 'kube-prometheus/kube-prometheus-static-etcd.libsonnet') + {
   _config+:: {
     namespace: 'monitoring',

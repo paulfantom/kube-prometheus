@@ -1,5 +1,5 @@
 local mixin = import 'kube-prometheus/kube-prometheus-config-mixins.libsonnet';
-local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') + {
+local kp = (import 'kube-prometheus/main.libsonnet') + {
   _config+:: {
     namespace: 'monitoring',
   },
