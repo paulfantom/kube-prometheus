@@ -26,6 +26,8 @@ local defaults = {
   rawDashboards: {},
   folderDashboards: {},
   containers: [],
+  datasources: [],
+  config: {},
 };
 
 function(params) {
@@ -54,6 +56,8 @@ function(params) {
         rawDashboards: g.config.rawDashboards,
         folderDashboards: g.config.folderDashboards,
         containers: g.config.containers,
+        datasources+: g.config.datasources,
+        config+: g.config.config,
       },
     },
   },
