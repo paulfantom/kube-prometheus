@@ -23,7 +23,7 @@ local manifests =
   { ['blackbox-exporter-' + name]: kp.blackboxExporter[name] for name in std.objectFields(kp.blackboxExporter) } +
   { ['kube-state-metrics-' + name]: kp.kubeStateMetrics[name] for name in std.objectFields(kp.kubeStateMetrics) } +
   { ['alertmanager-' + name]: kp.alertmanager[name] for name in std.objectFields(kp.alertmanager) } +
-  { ['prometheus-' + name]: kp.prometheus[name] for name in std.objectFields(kp.prometheus) } +
+  { ['prometheus-' + name]: kp.prometheus[name] for name in std.objectFields(std.prune(kp.prometheus)) } +
   { ['prometheus-adapter-' + name]: kp.prometheusAdapter[name] for name in std.objectFields(kp.prometheusAdapter) } +
   { ['grafana-' + name]: kp.grafana[name] for name in std.objectFields(kp.grafana) } +
   { ['kubernetes-' + name]: kp.kubernetesMixin[name] for name in std.objectFields(kp.kubernetesMixin) };
